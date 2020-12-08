@@ -31,18 +31,18 @@ public class Vida_de_Designer {
         }
         else{
             
-            if(energia<2 && estresse>3){
             
                 System.out.println("Preciso pausar para o café!");
                  
             
             }
+            
         
         }
     
-    }
     
-    void entregar_trabalho(){
+    
+    void entregar(){
     
         if(trabalhos>0){
             
@@ -54,7 +54,7 @@ public class Vida_de_Designer {
 
     }
     
-    void alteracao_trabalho(){
+    void alteracao(){
     
         if(energia>1 && estresse <4){
             
@@ -75,7 +75,7 @@ public class Vida_de_Designer {
         }
     }
     
-    void pausa_cafe(){
+    void cafe(){
             
             System.out.println("Só um café para continuar os trabalhos!");
             energia+=1;
@@ -107,7 +107,7 @@ public class Vida_de_Designer {
     
     }
     
-    void renovar_licenca(){
+    void licenca(){
         
         if(dinheiro > 0){
         
@@ -125,7 +125,7 @@ public class Vida_de_Designer {
     
     }
     
-    void novo_trabalho(){
+    void novo(){
         
         if(energia < 3 && trabalhos < 3 && estresse <2){
             
@@ -140,7 +140,7 @@ public class Vida_de_Designer {
         }
     }
     
-    void updrade_pc(){
+    void upgrade(){
     
         if(dinheiro>0){
             
@@ -182,37 +182,47 @@ public class Vida_de_Designer {
         System.out.println("Qual o nível de estresse do seu designer? (1 até 5)");
         int estresse=dados.nextInt();
         
-        dados.close();
         
         //criando o meu designer e dando seus parÂmetros
         Vida_de_Designer designer = new Vida_de_Designer(energia, dinheiro, trabalhos, estresse);
         
-        System.out.println(designer);
-        
-      
+        System.out.println("Digite o que o designer deve fazer: " + " trabalhar "+ " alterartrabalho " + " entregartrabalho " + " comer " + " cafe " + " descansar " + " upgradepc " + " comprarlicenca " +" novotrabalho ");
+         
+        while(true){
+            String novodado = dados.nextLine();
+            String[] dado = novodado.split(" ");
+            if(dado[0].equals("fim")){
+                break;
+            }else if(dado[0].equals("trabalhar")){
+                designer.trabalhar();
+            }else if(dado[0].equals("entregartrabalho")){
+                designer.entregar();
+            }else if(dado[0].equals("alterartrabalho")){
+                designer.alteracao();
+            }else if(dado[0].equals("cafe")){
+                designer.cafe();
+            }else if(dado[0].equals("comer")){
+                designer.comer();
+            }else if(dado[0].equals("descansar")){
+                designer.descansar();   
+            }else if(dado[0].equals("upgradepc")){
+                designer.upgrade();
+            }else if(dado[0].equals("comprarlicenca")){
+                designer.licenca();
+            }else if(dado[0].equals("novo")){
+                designer.novo();
+            }else if(dado[0].equals("mostrar")){
+                System.out.println(designer);
+            }else{
+                System.out.println("invalido");
+            }
             
-        designer.trabalhar();
-        designer.trabalhar();
-        
-        designer.pausa_cafe();
-        designer.entregar_trabalho();
-        designer.alteracao_trabalho();
-        designer.trabalhar();
-        designer.trabalhar();
-        designer.entregar_trabalho();
-        designer.novo_trabalho();
-        designer.descansar();
-        designer.novo_trabalho();
-        designer.renovar_licenca();
-        designer.updrade_pc();
-        designer.novo_trabalho();
-        designer.trabalhar();
-        designer.entregar_trabalho();
-        designer.pausa_cafe();
-        designer.novo_trabalho();
+            
+        }
         
         System.out.println(designer);
+        
+        dados.close();
         
     }
-    
 }
