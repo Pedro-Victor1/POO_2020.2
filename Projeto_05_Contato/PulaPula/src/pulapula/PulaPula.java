@@ -53,10 +53,7 @@ public class PulaPula {
        
        espera.add(crianca);
        System.out.println("A    " + crianca.getNome() + "    chegou na fila"); 
-            
-       
         
-       
     }
     
 
