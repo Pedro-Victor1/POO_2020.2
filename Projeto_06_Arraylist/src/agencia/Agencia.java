@@ -78,6 +78,7 @@ public class Agencia {
      
     }
         
+    //preciso entender isso aqui 
     public ArrayList<Operacao> getExtrato(){
     
         for(int i=0; i<extrato.size(); i++){
@@ -90,6 +91,7 @@ public class Agencia {
         
     }   
     
+    //preciso entender isso aqui hermana
     public ArrayList<Operacao> getExtratoLast(int qtd){
 
        for(int i=extrato.size()-qtd; i<extrato.size(); i++){
