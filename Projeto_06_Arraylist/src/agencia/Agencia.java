@@ -51,12 +51,8 @@ public class Agencia {
     }
     
     public void setNumero(int numero){
-        
         if(numero==this.numero){
-            
-            System.out.println("Conta já existe! Crie outra");
-            
-            
+            System.out.println("Conta já existe! Crie outra");   
         }
         else{
         

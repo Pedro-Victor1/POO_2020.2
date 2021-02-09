@@ -75,12 +75,10 @@ public class PulaPula {
     //ela sai do vetor de kids brincando e vai pro último lugar das kids esperando
     void fora(){
         
-        
        espera.add(brincando.get(0)); 
        brincando.remove(brincando.get(0));
        
        System.out.println("Uma criança saiu do pula pula!");
-       
        
     }
 

@@ -59,7 +59,7 @@ public class Topic {
                 saida+=" @ ";
             }
             else{
-                saida += "=" + cadeiras.get(i);
+                saida += " " + cadeiras.get(i);
                 }
             }    
         for(int i=qtdPrefer; i<cadeiras.size(); i++){
@@ -67,7 +67,7 @@ public class Topic {
                 saida+=" = ";
             }
             else{
-                saida += "@" + cadeiras.get(i);
+                saida += " " + cadeiras.get(i);
             }
         }
             return saida+=" ] ";
@@ -114,7 +114,8 @@ public class Topic {
             }
             }
             if(pos==-1){    
-                System.out.println("Lotado");
+                
+                throw new RuntimeException("fail: Lotado");
             }
             else{
                 cadeiras.set(pos, pass);
@@ -123,7 +124,7 @@ public class Topic {
         }
         else{
             
-            System.out.println("Essa pessoa já tá na topic");
+            throw new RuntimeException("fail: essa pessoa já está na topic");
         
         }
     }
@@ -131,7 +132,9 @@ public class Topic {
     Pass descer(String name){
         Pass aux = procurarPessoa(name);
             if(aux == null){
-                System.out.println("Não existe essa pessoa");
+                
+                throw new RuntimeException("fail: essa pessoa não tá na topic");
+                
             }
             else{ 
                 cadeiras.remove(aux);
@@ -148,24 +151,31 @@ public class Topic {
         Scanner dados = new Scanner(System.in);
 
          while(true){
-            String novodado = dados.nextLine();
-            String[] dd = novodado.split(" ");
-            if(dd[0].equals("finalizar")){
-                break;
-            }else if(dd[0].equals("iniciar")){
-                combi=new Topic(Integer.parseInt(dd[1]), Integer.parseInt(dd[2]));   
-                System.out.println(combi);
+            try{
+                String novodado = dados.nextLine();
+                String[] dd = novodado.split(" ");
+                if(dd[0].equals("finalizar")){
+                    break;
+                }else if(dd[0].equals("iniciar")){
+                    combi=new Topic(Integer.parseInt(dd[1]), Integer.parseInt(dd[2]));   
+                    System.out.println(combi);
 
-            }else if(dd[0].equals("subir")){
-                combi.subir(new Pass(dd[1], Integer.parseInt(dd[2])));
-                System.out.println(combi);
-
-            }else if(dd[0].equals("descer")){
-                combi.descer(dd[1]);
-                System.out.println(combi);
-            }else{
-                System.out.println("invalido"); 
-            }
+                }else if(dd[0].equals("subir")){
+                    combi.subir(new Pass(dd[1], Integer.parseInt(dd[2])));
+                    System.out.println(combi);
+                }else if(dd[0].equals("descer")){
+                    combi.descer(dd[1]);
+                    System.out.println(combi);
+                }else{
+                    System.out.println("invalido"); 
+                }
+                
+                
+           }catch(RuntimeException e){
+           
+               System.out.println(e.getMessage());
+           
+           }
         }
                   
          dados.close();
