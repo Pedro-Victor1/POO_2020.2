@@ -114,7 +114,8 @@ public class Topic {
             }
             }
             if(pos==-1){    
-                System.out.println("fail: Lotado");
+                
+                throw new RuntimeException("fail: Lotado");
             }
             else{
                 cadeiras.set(pos, pass);
@@ -122,14 +123,18 @@ public class Topic {
             }    
         }
         else{
-            System.out.println("fail: essa pessoa já está na topic");
+            
+            throw new RuntimeException("fail: essa pessoa já está na topic");
+        
         }
     }
     
     Pass descer(String name){
         Pass aux = procurarPessoa(name);
             if(aux == null){
-                System.out.println("fail: essa pessoa não tá na topic");
+                
+                throw new RuntimeException("fail: essa pessoa não tá na topic");
+                
             }
             else{ 
                 cadeiras.remove(aux);
@@ -140,9 +145,13 @@ public class Topic {
         }
 
     public static void main(String[] args) {
+        
         Topic combi = new Topic(0, 0);
+        
         Scanner dados = new Scanner(System.in);
+
          while(true){
+            try{
                 String novodado = dados.nextLine();
                 String[] dd = novodado.split(" ");
                 if(dd[0].equals("finalizar")){
@@ -159,13 +168,17 @@ public class Topic {
                     System.out.println(combi);
                 }else{
                     System.out.println("invalido"); 
-                }     
+                }
+                
+                
+           }catch(RuntimeException e){
+           
+               System.out.println(e.getMessage());
+           
            }
-
-           dados.close();
-
-    } 
+        }
+                  
+         dados.close();
+    
+    }    
 }
-
-      
-
