@@ -129,9 +129,7 @@ public class Agenda {
         if(contato==null){
             contato = new Contato(name);
             this.contatos.add(contato);
-
         }
-        
         contato.addFone(fone.getLabel(), fone.getNumber());
     }
     
@@ -195,7 +193,7 @@ public class Agenda {
                 System.out.println(aux);
             }
         }
-    return aux;
+        return aux;
     }
     
     public String toString(){

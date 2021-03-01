@@ -1,6 +1,4 @@
-
-package agendaa;
-
+package contatostar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,16 +18,16 @@ class Fone{
         for(int i = 0; i < number.length(); i++){
             if(!validos.contains("" + number.charAt(i))){
                 throw new RuntimeException("Fail: número invalido");
-            }
-        }
-    }   
+            }  
+        }    
+    }
     
     Fone(String serial){
      String array[]= serial.split(":");
         label=array[0];
         number=array[1];
+             
     }
-    
     
     public String getLabel(){
         return this.label;
@@ -42,23 +40,26 @@ class Fone{
     public String toString(){
         return label + number;   
     }
-
 }
 
 class Contato{
-    private String name;
-    private boolean favorito;
-    private ArrayList<Fone> fones;
+    protected String name;
+    protected ArrayList<Fone> fones;
 
-    public Contato(String name){
+    public Contato(String name, List <Fone> fones){
         this.name=name;
-        fones = new ArrayList<>();
+        this.fones = new ArrayList<>();
+        if(fones != null){
+            for(Fone fone : fones){
+                this.fones.add(fone);
+            }
+        }
+    }
+
+    String getName(){
+        return name;
     }
     
-    boolean getFavorito(){
-        return favorito;
-    }
-        
     public void addFone(String label, String number){
         fones.add(new Fone(label, number));     
     }
@@ -71,10 +72,7 @@ class Contato{
            fones.remove(fones.get(index));      
     }
     
-    public void setBookmark(boolean valor){
-        this.favorito = valor;
-    }
-    
+    //muda no public to string pra saber se é favorito ou não
     public String toString(){
         String saida="";
         saida += " " + name + " : " + fones;
@@ -82,25 +80,49 @@ class Contato{
     }
 }
 
+class ContatoPlus extends Contato{
+    private boolean favorito;
 
-public class Agendaa {
-
-    Map <String, Contato> contatos;
-    Map <String, Contato> bookmarks;
-
-    public Agendaa(){
-        contatos = new TreeMap<>();
-        bookmarks = new TreeMap<>();
+    public ContatoPlus(String name, List <Fone> fones) {
+        super(name, fones);
     }
     
-    public void addContato(String name, List <Fone> fones){  //List <Fone> fones
-        if(!contatos.containsKey(name)){
-            contatos.put(name, new Contato(name));
-        } 
-        Contato contato = contatos.get(name);
-        
-        for(Fone fone : fones){
-            contato.addFone(fone);
+    @Override
+    public String getName( ){
+        return name;
+    }
+    
+    public void setFavorito(boolean valor){
+        this.favorito = valor;
+    }
+
+    boolean getFavorito(){
+        return favorito;
+    }
+    
+    public String toString(){
+        String saida="";
+        saida+= (this.favorito ? "@" : "-") + " " + name + " " + " " + fones;
+        return saida;
+    }
+}
+
+class Agenda{
+    Map <String, Contato> contatos;
+
+    public Agenda(){
+        contatos = new TreeMap<>();
+    }
+    
+    public void addContato(Contato contato, List <Fone> fones){
+        if(!contatos.containsKey(contato.name)){
+            contatos.put(contato.name, contato);
+        }
+        else{
+            contato=this.getContato(contato.name); 
+            for(Fone fone : fones){
+                contato.addFone(fone.getLabel(), fone.getNumber());
+            }
         }
     }
     
@@ -111,8 +133,8 @@ public class Agendaa {
     }
     
     ArrayList <Contato> procurar(String padrao){
-        ArrayList<Contato> aux = new ArrayList<>();
-        for(Contato contato : contatos.values()){
+        ArrayList<Contato> aux= new ArrayList<>();
+        for(Contato contato: contatos.values()){
             if(contato.toString().contains(padrao)){
                 aux.add(contato);
             }
@@ -129,44 +151,57 @@ public class Agendaa {
         if(contato == null){
             throw new RuntimeException("Fail: contato não existe");
         }   
-        return contato;        
+        return contato;            
     }
     
+    public String toString(){
+        String saida="";
+        for(Contato contato : contatos.values()){
+            saida+=contato + "\n";
+        }
+        return saida;
+    }
+}    
+
+class AgendaPlus extends Agenda{
+    
+    TreeMap<String, Contato> bookmarks;
+    
+    public AgendaPlus(){
+        bookmarks = new TreeMap<>();    
+    }
+      
     public void bookmark(String name){
-        Contato contato = contatos.get(name);
-        if(!contato.getFavorito()){
-            contato.setBookmark(true);
-            bookmarks.put(name, contato);
+        Contato contato = this.getContato(name);
+        if(contato instanceof ContatoPlus){
+            ContatoPlus cp = (ContatoPlus) contato;
+            if(cp.getFavorito()){
+                bookmarks.put(name, contato);
+            }
+            else{
+                bookmarks.put(name, contato);
+                cp.setFavorito(true);
+            }
         }
     }
     
     public void unBookmark(String name){
-        Contato contato = contatos.get(name);
-        if(contato.getFavorito()){
+        Contato contato = this.getContato(name);
+        ContatoPlus cp = (ContatoPlus) contato;
+        if(cp.getFavorito()){
             bookmarks.remove(name, contato);
-            contato.setBookmark(false);
+            cp.setFavorito(false);
         }
     }
     
     ArrayList <Contato> getBookmarks(){
         return new ArrayList<Contato>(bookmarks.values()); 
     }
-    
-    public String toString(){
-        String saida="";
-        for(Contato contato : contatos.values()){
-            if(!contato.getFavorito()){
-                saida += " - " + contato; 
-            }
-            else{
-                saida += " @ " + contato;
-            }
-        }
-        return saida;
-    }
-    
+}
+
+public class Contatostar{
     public static void main(String[] args) {
-        Agendaa telefonica = new Agendaa();
+        AgendaPlus telefonica = new AgendaPlus();
         try (Scanner dados = new Scanner(System.in)){
             while(true){
                 try{
@@ -176,10 +211,14 @@ public class Agendaa {
                         break;
                     }else if(dd[0].equals("addContato")){
                         List<Fone> fones = new ArrayList<>(); 
-                        for(int i=2; i<dd.length; i++){
+                        for(int i=2; i<dd.length-1; i++){
                             fones.add(new Fone(dd[i]));
+                        } 
+                        ContatoPlus contato = new ContatoPlus(dd[1], fones);
+                        if(dd[dd.length-1].equals("sim")){
+                           contato.setFavorito(true);
                         }
-                        telefonica.addContato((dd[1]), fones);
+                        telefonica.addContato(contato, fones);
                         System.out.println(telefonica);
                     }else if(dd[0].equals("getContatos")){
                         System.out.println(telefonica);
@@ -198,15 +237,15 @@ public class Agendaa {
                         System.out.print(telefonica);
                     }else if(dd[0].equals("getBookmarks")){
                         System.out.print(telefonica.getBookmarks());
-                    }
+                    }   
+              }catch(ArrayIndexOutOfBoundsException e){
+                    throw e;
                 }catch(RuntimeException e){
                     System.out.println(e.getMessage());
-                }   
+                }  
             }
         }  
         System.out.println(telefonica);
-    }                 
+    }
 }
-        
 
-    
